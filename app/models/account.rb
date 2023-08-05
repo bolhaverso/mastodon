@@ -66,6 +66,9 @@ class Account < ApplicationRecord
   MENTION_RE    = %r{(?<=^|[^/[:word:]])@((#{USERNAME_RE})(?:@[[:word:].-]+[[:word:]]+)?)}i
   URL_PREFIX_RE = %r{\Ahttp(s?)://[^/]+}
   USERNAME_ONLY_RE = /\A#{USERNAME_RE}\z/i
+  MAXIMUM_NOTE_LENGTH = 1200
+  MAXIMUM_FIELDS_LENGTH = 12
+  DEFAULT_FIELDS_SIZE = 12
 
   include Attachmentable
   include AccountAssociations
@@ -96,8 +99,8 @@ class Account < ApplicationRecord
   validates :username, format: { with: /\A[a-z0-9_]+\z/i }, length: { maximum: 30 }, if: -> { local? && will_save_change_to_username? && actor_type != 'Application' }
   validates_with UnreservedUsernameValidator, if: -> { local? && will_save_change_to_username? && actor_type != 'Application' }
   validates :display_name, length: { maximum: 30 }, if: -> { local? && will_save_change_to_display_name? }
-  validates :note, note_length: { maximum: 500 }, if: -> { local? && will_save_change_to_note? }
-  validates :fields, length: { maximum: 4 }, if: -> { local? && will_save_change_to_fields? }
+  validates :note, note_length: { maximum: MAXIMUM_NOTE_LENGTH }, if: -> { local? && will_save_change_to_note? }
+  validates :fields, length: { maximum: MAXIMUM_FIELDS_LENGTH }, if: -> { local? && will_save_change_to_fields? }
   validates :uri, absence: true, if: :local?, on: :create
   validates :inbox_url, absence: true, if: :local?, on: :create
   validates :shared_inbox_url, absence: true, if: :local?, on: :create
@@ -333,8 +336,6 @@ class Account < ApplicationRecord
 
     self[:fields] = fields
   end
-
-  DEFAULT_FIELDS_SIZE = 4
 
   def build_fields
     return if fields.size >= DEFAULT_FIELDS_SIZE
