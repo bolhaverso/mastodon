@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import classNames from 'classnames';
 
@@ -9,7 +9,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
 import AutosuggestInput from 'mastodon/components/autosuggest_input';
-import { Icon }  from 'mastodon/components/icon';
+import { Icon } from 'mastodon/components/icon';
 import { IconButton } from 'mastodon/components/icon_button';
 
 const messages = defineMessages({
@@ -72,10 +72,10 @@ class OptionIntl extends PureComponent {
   };
 
   onSuggestionSelected = (tokenStart, token, value) => {
-    this.props.onSuggestionSelected(tokenStart, token, value, ['poll', 'options', this.props.index]);
+    this.props.onSuggestionSelected(tokenStart, token, value, [ 'poll', 'options', this.props.index ]);
   };
 
-  render () {
+  render() {
     const { isPollMultiple, title, lang, index, autoFocus, intl } = this.props;
 
     return (
@@ -93,7 +93,7 @@ class OptionIntl extends PureComponent {
 
           <AutosuggestInput
             placeholder={intl.formatMessage(messages.option_placeholder, { number: index + 1 })}
-            maxLength={50}
+            maxLength={100}
             value={title}
             lang={lang}
             spellCheck
@@ -102,7 +102,7 @@ class OptionIntl extends PureComponent {
             onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
             onSuggestionsClearRequested={this.onSuggestionsClearRequested}
             onSuggestionSelected={this.onSuggestionSelected}
-            searchTokens={[':']}
+            searchTokens={[ ':' ]}
             autoFocus={autoFocus}
           />
         </label>
@@ -148,7 +148,7 @@ class PollForm extends ImmutablePureComponent {
     this.props.onChangeSettings(this.props.expiresIn, !this.props.isMultiple);
   };
 
-  render () {
+  render() {
     const { options, lang, expiresIn, isMultiple, onChangeOption, onRemoveOption, intl, ...other } = this.props;
 
     if (!options) {
@@ -164,7 +164,7 @@ class PollForm extends ImmutablePureComponent {
         </ul>
 
         <div className='poll__footer'>
-          <button type='button' disabled={options.size >= 4} className='button button-secondary' onClick={this.handleAddOption}><Icon id='plus' /> <FormattedMessage {...messages.add_option} /></button>
+          <button type='button' disabled={options.size >= 13} className='button button-secondary' onClick={this.handleAddOption}><Icon id='plus' /> <FormattedMessage {...messages.add_option} /></button>
 
           {/* eslint-disable-next-line jsx-a11y/no-onchange */}
           <select value={expiresIn} onChange={this.handleSelectDuration}>
